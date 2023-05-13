@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First_project</title>
+    {% load static %}
+    {% csrf_token %}
+</head>
+
+<body>
+<!-- <div>Hello, Kingdom!</div> -->
+
+<div class="con">
+    <div class="sub">
+        <input type="text" class="inp" placeholder="Пройти игру">
+        <div class="submit" onclick="sub()">✔</div>
+    </div>
+    <div class="tasks">
+        <h1 style="color: black">Список задач</h1>
+
+        {% for i in data %}
+
+        <div class="task">
+            <div class="text">{{i.text}}</div>
+            <div class="del" onclick="del()">🗑</div>
+        </div>
+
+        {%endfor%}
+    </div>
+</div>
+<script>
+    function sub(){
+        let inp = document.querySelector(".inp").value
+        let data = {todo: inp}
+
+        const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        fetch('/handle_add').then(r=>r.text()).then(data=>console.log(data)).catch(error=>console.error(error))
+
+        fetch('/my', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrfToken},
+            body: JSON.stringify(data)
+        })
+        //.then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+    }
+
+    function del(){
+        console.log("deleted")
+        //fetch('/handle_add').then(r=>r.text()).then(data=>console.log(data)).catch(error=>console.error(error))
+    }
+</script>
+
+<style>
+        body{
+    background-image: url(https://trikky.ru/wp-content/blogs.dir/1/files/2020/03/01/wiki-background.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    color: #ffffff;
+    user-select: none;
+    height: 100vh;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.inp{
+    width: 100%;
+    font-size: 30px;
+    background: transparent;
+    outline: none;
+    border: none;
+    color: white;
+}
+
+.inp::placeholder{
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.submit{
+    color: rgb(0, 255, 34);
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.sub{
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    margin: 10px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    margin-bottom: 30px;
+}
+
+.tasks{
+    min-width: 800px;
+}
+
+.task{
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    margin: 10px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.del{
+    color: red;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+</style>
+</body>
+
+</html>
